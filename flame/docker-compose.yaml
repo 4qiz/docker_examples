@@ -1,0 +1,20 @@
+services:
+  flame:
+    image: pawelmalak/flame:latest
+    container_name: flame
+    hostname: flame
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PASSWORD=flamepass
+      - PORT=80
+      - NODE_ENV=production
+    restart: always
+    networks:
+      - services
+
+networks:
+  services:
+    external: true
+    driver: bridge
+    name: services

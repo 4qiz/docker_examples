@@ -1,0 +1,20 @@
+services:
+  registry:
+    image: registry:2.8.3
+    hostname: registry
+    restart: always
+    environment:
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry-Realm
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/registry.passwd
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+    volumes:
+      - ./data:/data
+      - ./auth:/auth
+    networks:
+      - services
+
+networks:
+  services:
+    external: true
+    name: services

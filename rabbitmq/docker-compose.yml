@@ -1,0 +1,39 @@
+services:
+  rabbitmq:
+    hostname: "rabbit"
+    image: rabbitmq:4.0-management
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    env_file:
+      - .env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - "./rabbit-data:/var/lib/rabbitmq/mnesia/"
+    networks:
+      - rabbitmq
+      - traefik-public
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik-public
+
+      # Console Endpoint
+      traefik.http.routers.rabbit-console.rule: Host(`${RABBITMQ_CONSOLE_DOMAIN}`)
+      traefik.http.routers.rabbit-console.entrypoints: http
+      traefik.http.routers.rabbit-console.service: rabbit-console-service
+      #traefik.http.routers.rabbit-console.middlewares: https-redirect
+
+      traefik.http.services.rabbit-console-service.loadbalancer.server.port: 15672
+
+networks:
+  rabbitmq:
+    driver: bridge
+  traefik-public:
+    external: true

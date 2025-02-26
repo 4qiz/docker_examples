@@ -1,0 +1,15 @@
+services:
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    hostname: phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - services
+
+networks:
+  services:
+    external: true
+    driver: bridge
+    name: services

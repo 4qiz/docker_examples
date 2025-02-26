@@ -1,0 +1,22 @@
+services:
+  gitea:
+    image: gitea/gitea:1.21-nightly
+    hostname: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: always
+    volumes:
+      - ./data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "64022:22"
+    networks:
+      - services
+
+networks:
+  services:
+    external: true
+    driver: bridge
+    name: services

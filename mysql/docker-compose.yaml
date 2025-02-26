@@ -1,0 +1,11 @@
+services:
+  mysql-standalone:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: default_db
+    volumes:
+      - "./data:/var/lib/mysql"
+    ports:
+      - "3001:3306"

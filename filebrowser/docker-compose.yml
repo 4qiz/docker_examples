@@ -1,0 +1,21 @@
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    hostname: filebrowser
+    volumes:
+      - ./root/data:/srv
+      - ./root/filebrowser.db:/database/filebrowser.db
+      - ./root/settings.json:/.filebrowser.json
+    environment:
+      - PUID=1001
+      - PGID=1001
+    restart: always
+    networks:
+      - services
+
+networks:
+  services:
+    external: true
+    driver: bridge
+    name: services

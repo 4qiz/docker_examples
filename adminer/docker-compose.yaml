@@ -1,0 +1,16 @@
+services:
+  adminer:
+    image: adminer:latest
+    hostname: adminer
+    restart: always
+    environment:
+      - ADMINER_DESIGN=nicu
+    #not bad: lucas-sandery flat dracula nicu pepa-linha pilot rmsoft # defaule: nette
+    networks:
+      - services
+
+networks:
+  services:
+    external: true
+    driver: bridge
+    name: services
