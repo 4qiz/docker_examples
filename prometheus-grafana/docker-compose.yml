@@ -1,0 +1,46 @@
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring
+      - traefik-public
+    volumes:
+      - grafana-data:/var/lib/grafana
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik-public
+      traefik.http.routers.grafana-console.rule: Host(`graf.ex.ru`)
+      traefik.http.routers.grafana-console.entrypoints: http
+      traefik.http.routers.grafana-console.service: grafana-console-service
+
+      traefik.http.services.grafana-console-service.loadbalancer.server.port: 3000
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+  traefik-public:
+    external: true
+
+volumes:
+  grafana-data:
